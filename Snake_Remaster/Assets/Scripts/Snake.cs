@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(BoxCollider2D))]
 public class Snake : MonoBehaviour
@@ -9,57 +11,52 @@ public class Snake : MonoBehaviour
         public Transform segmentPrefab;
         public Vector2 direction = Vector2.right;
         public int initialSize = 4;
+        
 
         private void Start()
         {
-        _segments = new List<Transform>();
-        _segments.Add(this.transform);
             ResetState();
         }
-
-        private void Update()
+    public void GameOver()
+    {
+        SceneManager.LoadScene(0);
+    }
+    private void Update()
+    {
+        // Only allow turning up or down while moving in the x-axis
+        if (this.direction.x != 0f)
         {
-            // Only allow turning up or down while moving in the x-axis
-            if (this.direction.x != 0f)
+            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
             {
-                if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
-                {
-                    this.direction = Vector2.up;
-                }
-                else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
-                {
-                    this.direction = Vector2.down;
-                }
+                this.direction = Vector2.up;
             }
-            // Only allow turning left or right while moving in the y-axis
-            else if (this.direction.y != 0f)
+            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
             {
-                if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
-                {
-                    this.direction = Vector2.right;
-                }
-                else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
-                {
-                    this.direction = Vector2.left;
-                }
+                this.direction = Vector2.down;
             }
-        Debug.Break();
         }
-        private void FixedUpdate()
+        // Only allow turning left or right while moving in the y-axis
+        else if (this.direction.y != 0f)
         {
-            // Set each segment's position to be the same as the one it follows. We
-            // must do this in reverse order so the position is set to the previous
-            // position, otherwise they will all be stacked on top of each other.
+            if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                this.direction = Vector2.right;
+            }
+            else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                this.direction = Vector2.left;
+            }
+        }
+    }
+    private void FixedUpdate()
+        {
             for (int i = _segments.Count - 1; i > 0; i--)
             {
                 _segments[i].position = _segments[i - 1].position;
             }
-
             // Move the snake in the direction it is facing
-            // Round the values to ensure it aligns to the grid
             float x = Mathf.Round(this.transform.position.x) + this.direction.x;
             float y = Mathf.Round(this.transform.position.y) + this.direction.y;
-
             this.transform.position = new Vector2(x, y);
         }
 
@@ -67,32 +64,24 @@ public class Snake : MonoBehaviour
         {
             Transform segment = Instantiate(this.segmentPrefab);
             segment.position = _segments[_segments.Count - 1].position;
-
             _segments.Add(segment);
         }
 
         public void ResetState()
         {
-            this.direction = Vector2.right;
-            this.transform.position = Vector3.zero;
-
-            // Start at 1 to skip destroying the head
-            for (int i = 1; i < _segments.Count; i++)
-            {
-                Destroy(_segments[i].gameObject);
-            }
-
-            // Clear the list but add back this as the head
-            _segments.Clear();
-            _segments.Add(this.transform);
-
-            // -1 since the head is already in the list
-            for (int i = 0; i < this.initialSize - 1; i++)
-            {
-                Grow();
-            }
+                    // Start at 1 to skip destroying the head
+                    for (int i = 1; i < _segments.Count; i++)
+                    {
+                        Destroy(_segments[i].gameObject);
+                    }
+                    _segments.Clear();
+                _segments.Add(this.transform);
+        this.transform.position = Vector3.zero;
+        for (int i = 0; i < this.initialSize; i++)
+        {
+            _segments.Add(Instantiate(this.segmentPrefab));
         }
-        
+    }       
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.tag == "Food")
@@ -101,7 +90,7 @@ public class Snake : MonoBehaviour
             }
             else if (other.tag == "Obstacle")
             {
-                ResetState();
+                GameOver();
             }
         }
 
