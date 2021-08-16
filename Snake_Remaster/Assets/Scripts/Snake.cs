@@ -65,7 +65,14 @@ public class Snake : MonoBehaviour
             Transform segment = Instantiate(this.segmentPrefab);
             segment.position = _segments[_segments.Count - 1].position;
             _segments.Add(segment);
+            
         }
+    public void Burn()
+    {
+        Transform segment = _segments[_segments.Count - 1].transform;
+        _segments.Remove(segment);
+        Destroy(segment.gameObject);
+    }
 
         public void ResetState()
         {
@@ -92,6 +99,10 @@ public class Snake : MonoBehaviour
             {
                 GameOver();
             }
-        }
+            else if (other.tag == "Bottle")
+            {
+                Burn();
+            }
+         }
 
     }
