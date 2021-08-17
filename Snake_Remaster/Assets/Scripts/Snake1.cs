@@ -5,32 +5,32 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class Snake : MonoBehaviour
+public class Snake1 : MonoBehaviour
 {
         private List<Transform> _segments = new List<Transform>();
         public Transform segmentPrefab;
-        public Vector2 direction = Vector2.right;
+        public Vector2 direction = Vector2.up;
         public int initialSize = 4;
-        private Vector2Int gridposition;
-    public Score scorecontrol;
-    public GameOver GameOver;
+    public Score scorecontrol1;
 
-
-    private void Start()
+        private void Start()
         {
-        ResetState();
+            ResetState();
         }
-
+/*    public void GameOver()
+    {
+        SceneManager.LoadScene(0);
+    }*/
     private void Update()
     {
         // Only allow turning up or down while moving in the x-axis
         if (this.direction.x != 0f)
         {
-            if (Input.GetKeyDown(KeyCode.UpArrow))
+            if (Input.GetKeyDown(KeyCode.W))
             {
                 this.direction = Vector2.up;
             }
-            else if (Input.GetKeyDown(KeyCode.DownArrow))
+            else if (Input.GetKeyDown(KeyCode.S))
             {
                 this.direction = Vector2.down;
             }
@@ -38,11 +38,11 @@ public class Snake : MonoBehaviour
         // Only allow turning left or right while moving in the y-axis
         else if (this.direction.y != 0f)
         {
-            if (Input.GetKeyDown(KeyCode.RightArrow))
+            if (Input.GetKeyDown(KeyCode.D))
             {
                 this.direction = Vector2.right;
             }
-            else if (Input.GetKeyDown(KeyCode.LeftArrow))
+            else if (Input.GetKeyDown(KeyCode.A))
             {
                 this.direction = Vector2.left;
             }
@@ -83,27 +83,22 @@ public class Snake : MonoBehaviour
                     }
                     _segments.Clear();
                 _segments.Add(this.transform);
-       // this.transform.position = Vector3.zero;
+      //  this.transform.position = Vector3.zero;
         for (int i = 0; i < this.initialSize; i++)
         {
             _segments.Add(Instantiate(this.segmentPrefab));
         }
-/*        gameover.PlayerDied();*/
-    }
-    public void Gameover()
-    {
-        SceneManager.LoadScene(0);
-    }
-    private void OnTriggerEnter2D(Collider2D other)
+    }       
+        private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.tag == "Food")
             {
                 Grow();
-            scorecontrol.IncreaseScore(1);
+            scorecontrol1.IncreaseScore(1);
             }
             else if (other.tag == "Obstacle")
             {
-            Gameover();
+     //           GameOver();
             }
             else if (other.tag == "Bottle")
             {
