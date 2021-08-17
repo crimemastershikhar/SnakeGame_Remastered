@@ -5,12 +5,12 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class Snake : MonoBehaviour
+public class Snake2 : MonoBehaviour
 {
     private List<Transform> _segments = new List<Transform>();
     public Transform segmentPrefab;
-    public Vector2 direction = Vector2.right;
-    public int initialSize = 4;
+    public Vector2 direction = Vector2.down;
+    public int initialSize = 2;
     private Vector2Int gridposition;
     public GameObject pauseUI;
     private bool isPaused;
@@ -35,12 +35,12 @@ public class Snake : MonoBehaviour
         // Only allow turning up or down while moving in the x-axis
         if (this.direction.x != 0f)
         {
-            if (Input.GetKeyDown(KeyCode.UpArrow))
+            if (Input.GetKeyDown(KeyCode.W))
             {
                 this.direction = Vector2.up;
                 gameObject.transform.localEulerAngles = new Vector3(0, 0, 0);
             }
-            else if (Input.GetKeyDown(KeyCode.DownArrow))
+            else if (Input.GetKeyDown(KeyCode.S))
             {
                 this.direction = Vector2.down;
                 gameObject.transform.localEulerAngles = new Vector3(0, 0, 180);
@@ -49,12 +49,12 @@ public class Snake : MonoBehaviour
         // Only allow turning left or right while moving in the y-axis
         else if (this.direction.y != 0f)
         {
-            if (Input.GetKeyDown(KeyCode.RightArrow))
+            if (Input.GetKeyDown(KeyCode.D))
             {
                 this.direction = Vector2.right;
                 gameObject.transform.localEulerAngles = new Vector3(0, 0, -90);
             }
-            else if (Input.GetKeyDown(KeyCode.LeftArrow))
+            else if (Input.GetKeyDown(KeyCode.A))
             {
                 this.direction = Vector2.left;
                 gameObject.transform.localEulerAngles = new Vector3(0, 0, 90);
@@ -142,7 +142,7 @@ public class Snake : MonoBehaviour
         if (other.tag == "Food")
         {
             Grow();
-            scorecontrol.IncreaseScore(1);
+            scorecontrol.IncreaseScore2(1);
         }
         else if (other.tag == "Obstacle")
         {
@@ -151,7 +151,7 @@ public class Snake : MonoBehaviour
         else if (other.tag == "Bottle")
         {
             Burn();
-            scorecontrol.DecreaseScore(1);
+            scorecontrol.DecreaseScore2(1);
         }
         /*        else if (other.tag == "ScoreBoost")
                 {
