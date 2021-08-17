@@ -26,5 +26,11 @@ public class Score : MonoBehaviour
         RefreshUI();
     }
 
+    public void DecreaseScore (int decrease)
+    {
+        score -= decrease;
+        scoreText.text = "Score: " + score;
+    }
+
 
 }

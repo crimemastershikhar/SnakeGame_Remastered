@@ -13,13 +13,20 @@ public class Snake : MonoBehaviour
         public int initialSize = 4;
         private Vector2Int gridposition;
     public Score scorecontrol;
-    public GameOver GameOver;
+    public GameOver gameOver;
+    public Collider2D gridArea;
+    private float minX, maxX, minY, maxY;
 
 
     private void Start()
         {
         ResetState();
-        }
+        Bounds bound = gridArea.bounds;
+        minX = bound.min.x;
+        maxX = bound.max.x;
+        minY = bound.min.y;
+        maxY = bound.max.y;
+    }
 
     private void Update()
     {
@@ -29,10 +36,12 @@ public class Snake : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
                 this.direction = Vector2.up;
+                gameObject.transform.localEulerAngles = new Vector3(0, 0, 0);
             }
             else if (Input.GetKeyDown(KeyCode.DownArrow))
             {
                 this.direction = Vector2.down;
+                gameObject.transform.localEulerAngles = new Vector3(0, 0, 180);
             }
         }
         // Only allow turning left or right while moving in the y-axis
@@ -41,26 +50,57 @@ public class Snake : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
                 this.direction = Vector2.right;
+                gameObject.transform.localEulerAngles = new Vector3(0, 0, -90);
             }
             else if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
                 this.direction = Vector2.left;
+                gameObject.transform.localEulerAngles = new Vector3(0, 0, 90);
             }
         }
     }
     private void FixedUpdate()
         {
-            for (int i = _segments.Count - 1; i > 0; i--)
-            {
-                _segments[i].position = _segments[i - 1].position;
-            }
-            // Move the snake in the direction it is facing
-            float x = Mathf.Round(this.transform.position.x) + this.direction.x;
-            float y = Mathf.Round(this.transform.position.y) + this.direction.y;
-            this.transform.position = new Vector2(x, y);
+        Movement();
+        }
+    private void Movement()
+    {
+        ScreenWrap();
+        for (int i = _segments.Count - 1; i > 0; i--)
+        {
+            _segments[i].position = _segments[i - 1].position;
+        }
+        // Move the snake in the direction it is facing
+        float x = Mathf.Round(this.transform.position.x) + this.direction.x;
+        float y = Mathf.Round(this.transform.position.y) + this.direction.y;
+        this.transform.position = new Vector2(x, y);
+    }
+    private void ScreenWrap()
+    {
+        Vector3 newPos = transform.position;
+
+        if (newPos.x > maxX)
+        {
+            newPos.x = -newPos.x + 1f;
+        }
+        else if (newPos.x <= minX)
+        {
+            newPos.x = -newPos.x - 1f;
         }
 
-        public void Grow()
+        if (newPos.y >= maxY)
+        {
+            newPos.y = -newPos.y + 1f;
+        }
+        else if (newPos.y <= minY)
+        {
+            newPos.y = -newPos.y - 1f;
+        }
+
+        transform.position = newPos;
+    }
+
+    public void Grow()
         {
             Transform segment = Instantiate(this.segmentPrefab);
             segment.position = _segments[_segments.Count - 1].position;
@@ -90,9 +130,11 @@ public class Snake : MonoBehaviour
         }
 /*        gameover.PlayerDied();*/
     }
-    public void Gameover()
+    public void killsnake()
     {
-        SceneManager.LoadScene(0);
+        Debug.Log("snake Died");  
+        gameOver.SnakeDied();
+/*        SceneManager.LoadScene(0);*/
     }
     private void OnTriggerEnter2D(Collider2D other)
         {
@@ -103,11 +145,12 @@ public class Snake : MonoBehaviour
             }
             else if (other.tag == "Obstacle")
             {
-            Gameover();
+               killsnake();
             }
             else if (other.tag == "Bottle")
             {
                 Burn();
+            scorecontrol.DecreaseScore(1);
             }
          }
 

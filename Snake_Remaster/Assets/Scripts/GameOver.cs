@@ -7,15 +7,15 @@ using UnityEngine.SceneManagement;
 
 public class GameOver : MonoBehaviour
 {
-    public Button buttonRestart;
+    public Button Restart;
     private void Awake()
     {
-        buttonRestart.onClick.AddListener(ReloadLevel);
+        Restart.onClick.AddListener(ReloadLevel);
     }
-/*    public void PlayerDied()
+    public void SnakeDied()
     {
         gameObject.SetActive(true);
-    }*/
+    }
     public void ReloadLevel()
     {
         SceneManager.LoadScene(0);
