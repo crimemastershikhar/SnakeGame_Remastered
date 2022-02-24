@@ -9,12 +9,6 @@ public class Score : MonoBehaviour
     private int score = 0;
     public TextMeshProUGUI scoreText2;
     private int score2 = 0;
-
-/*    private void Awake()
-    {
-        scoreText = GetComponent<TextMeshProUGUI>();
-        scoreText2 = GetComponent<TextMeshProUGUI>();
-    }*/
     private void Update()
     {
         RefreshUI();
@@ -37,21 +31,10 @@ public class Score : MonoBehaviour
     public void DecreaseScore (int decrease)
     {
         score -= decrease;
-/*        scoreText.text = "Score Green: " + score;*/
-/*        scoreText.text = "Score Red: " + score;*/
     }
     public void DecreaseScore2(int decrease)
     {
-        /*        scoreText.text = "Score Green: " + score;*/
         score2 -= decrease;
-        /*        scoreText.text = "Score Red: " + score;*/
     }
-    /*    public void Score1Double(int scoredb)
-        {
-            score *= 2;
-            scoreText.text = scoredb;
-            RefreshUI();
-        }*/
-
 
 }
