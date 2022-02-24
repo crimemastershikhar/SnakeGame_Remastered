@@ -32,7 +32,6 @@ public class Snake : MonoBehaviour
 
     private void Update()
     {
-        // Only allow turning up or down while moving in the x-axis
         if (this.direction.x != 0f)
         {
             if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -46,7 +45,6 @@ public class Snake : MonoBehaviour
                 gameObject.transform.localEulerAngles = new Vector3(0, 0, 180);
             }
         }
-        // Only allow turning left or right while moving in the y-axis
         else if (this.direction.y != 0f)
         {
             if (Input.GetKeyDown(KeyCode.RightArrow))
@@ -72,7 +70,6 @@ public class Snake : MonoBehaviour
         {
             _segments[i].position = _segments[i - 1].position;
         }
-        // Move the snake in the direction it is facing
         float x = Mathf.Round(this.transform.position.x) + this.direction.x;
         float y = Mathf.Round(this.transform.position.y) + this.direction.y;
         this.transform.position = new Vector2(x, y);
@@ -118,7 +115,6 @@ public class Snake : MonoBehaviour
 
     public void ResetState()
     {
-        // Start at 1 to skip destroying the head
         for (int i = 1; i < _segments.Count; i++)
         {
             Destroy(_segments[i].gameObject);
@@ -130,7 +126,6 @@ public class Snake : MonoBehaviour
         {
             _segments.Add(Instantiate(this.segmentPrefab));
         }
-        /*        gameover.PlayerDied();*/
     }
     public void killsnake()
     {
@@ -153,14 +148,5 @@ public class Snake : MonoBehaviour
             Burn();
             scorecontrol.DecreaseScore(1);
         }
-        /*        else if (other.tag == "ScoreBoost")
-                {
-                    scorecontrol.IncreaseScore += 10;
-                    Destroy(other.gameObject);
-
-                    cam.GetComponent<PowerUpSpanner>().Start();
-                    scoreText.text = "Score : " + scoreCount.ToString();
-                }*/
-
     }
 }
