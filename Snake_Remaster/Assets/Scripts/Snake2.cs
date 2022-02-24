@@ -32,7 +32,6 @@ public class Snake2 : MonoBehaviour
 
     private void Update()
     {
-        // Only allow turning up or down while moving in the x-axis
         if (this.direction.x != 0f)
         {
             if (Input.GetKeyDown(KeyCode.W))
@@ -46,7 +45,6 @@ public class Snake2 : MonoBehaviour
                 gameObject.transform.localEulerAngles = new Vector3(0, 0, 180);
             }
         }
-        // Only allow turning left or right while moving in the y-axis
         else if (this.direction.y != 0f)
         {
             if (Input.GetKeyDown(KeyCode.D))
@@ -72,7 +70,6 @@ public class Snake2 : MonoBehaviour
         {
             _segments[i].position = _segments[i - 1].position;
         }
-        // Move the snake in the direction it is facing
         float x = Mathf.Round(this.transform.position.x) + this.direction.x;
         float y = Mathf.Round(this.transform.position.y) + this.direction.y;
         this.transform.position = new Vector2(x, y);
@@ -118,19 +115,16 @@ public class Snake2 : MonoBehaviour
 
     public void ResetState()
     {
-        // Start at 1 to skip destroying the head
         for (int i = 1; i < _segments.Count; i++)
         {
             Destroy(_segments[i].gameObject);
         }
         _segments.Clear();
         _segments.Add(this.transform);
-        // this.transform.position = Vector3.zero;
         for (int i = 0; i < this.initialSize; i++)
         {
             _segments.Add(Instantiate(this.segmentPrefab));
         }
-        /*        gameover.PlayerDied();*/
     }
     public void killsnake()
     {
@@ -153,14 +147,5 @@ public class Snake2 : MonoBehaviour
             Burn();
             scorecontrol.DecreaseScore2(1);
         }
-        /*        else if (other.tag == "ScoreBoost")
-                {
-                    scorecontrol.IncreaseScore += 10;
-                    Destroy(other.gameObject);
-
-                    cam.GetComponent<PowerUpSpanner>().Start();
-                    scoreText.text = "Score : " + scoreCount.ToString();
-                }*/
-
     }
 }
