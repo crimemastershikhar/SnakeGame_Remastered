@@ -15,12 +15,8 @@ public class PowerScript : MonoBehaviour
     public void RandomizePosition()
     {
         Bounds bounds = this.gridArea.bounds;
-
-        // Pick a random position inside the bounds
         float x = Random.Range(bounds.min.x, bounds.max.x);
         float y = Random.Range(bounds.min.y, bounds.max.y);
-
-        // Round the values to ensure it aligns with the grid
         x = Mathf.Round(x);
         y = Mathf.Round(y);
 
@@ -33,13 +29,6 @@ public class PowerScript : MonoBehaviour
         yield return new WaitForSeconds(Random.Range(10f, 15f));
         StartCoroutine(ChangePosition());
     }
-
-
-    /*    IEnumerator changePosTimer()
-        {
-            yield return new WaitForSeconds(10f);
-            StartCoroutine(chnagePos());
-        }*/
 
     private void OnTriggerEnter2D(Collider2D other)
     {
